@@ -9,26 +9,26 @@ import SwiftUI
 
 struct TaskRowView: View {
     let task: ToDoTask
-
+    
     private var formattedDate: String {
         task.createdAt.formatted(date: .abbreviated, time: .shortened)
     }
-
+    
     var body: some View {
         HStack(alignment: .center) {
             Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(task.isCompleted ? .green : .gray)
-
+                .foregroundColor(task.isCompleted ? .taskGreen : .taskGray)
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(task.title)
-                    .strikethrough(task.isCompleted, color: .secondary)
-                    .foregroundColor(task.isCompleted ? .secondary : .primary)
-
+                    .strikethrough(task.isCompleted, color: .taskSecondary)
+                    .foregroundColor(task.isCompleted ? .taskSecondary : .taskPrimary)
+                
                 Text(formattedDate)
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.taskSecondary)
             }
-
+            
             Spacer()
         }
         .padding(.vertical, 8)
