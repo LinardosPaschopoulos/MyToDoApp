@@ -30,6 +30,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		E7BA1AFC2F0E5AF000B15CBD /* TaskList */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TaskList;
+			sourceTree = "<group>";
+		};
+		E7BA1B002F0E5D5100B15CBD /* Reusables And Utilities */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Reusables And Utilities";
+			sourceTree = "<group>";
+		};
 		E7EA3A5B2F05343B004B13EB /* MyToDoApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = MyToDoApp;
@@ -75,6 +85,8 @@
 		E7EA3A502F05343B004B13EB = {
 			isa = PBXGroup;
 			children = (
+				E7BA1B002F0E5D5100B15CBD /* Reusables And Utilities */,
+				E7BA1AFC2F0E5AF000B15CBD /* TaskList */,
 				E7EA3A5B2F05343B004B13EB /* MyToDoApp */,
 				E7EA3A692F05343C004B13EB /* MyToDoAppTests */,
 				E7EA3A732F05343C004B13EB /* MyToDoAppUITests */,
@@ -108,6 +120,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				E7BA1AFC2F0E5AF000B15CBD /* TaskList */,
+				E7BA1B002F0E5D5100B15CBD /* Reusables And Utilities */,
 				E7EA3A5B2F05343B004B13EB /* MyToDoApp */,
 			);
 			name = MyToDoApp;
