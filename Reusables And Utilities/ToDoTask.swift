@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct ToDoTask: Identifiable {
-    let id = UUID()
+struct ToDoTask: Identifiable, Codable, Equatable {
+    let id: UUID
     let title: String
     var isCompleted: Bool
     let createdAt: Date

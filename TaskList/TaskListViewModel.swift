@@ -10,16 +10,18 @@ import Combine
 import SwiftUI
 
 final class TaskListViewModel: ObservableObject {
-    @Published var tasks: [ToDoTask] = []
+    @Published private(set) var tasks: [ToDoTask] = []
     @Published var isShowingAddTask = false
     @Published var newTaskTitle = ""
-
+    
+    private let taskStore: TaskStore
     var sortedTasks: [ToDoTask] {
         tasks.sorted { $0.createdAt < $1.createdAt }
     }
-    
-    init() {
-        loadMockData()
+
+    init(taskStore: TaskStore) {
+        self.taskStore = taskStore
+        loadTasks()
     }
 
     func didTapAdd() {
@@ -36,48 +38,38 @@ final class TaskListViewModel: ObservableObject {
 
         tasks.append(
             ToDoTask(
+                id: UUID(),
                 title: trimmed,
                 isCompleted: false,
                 createdAt: Date()
             )
         )
 
+        persist()
         dismissAddTask()
     }
 
     func didSelectTask(_ task: ToDoTask) {
-        guard let index = tasks.firstIndex(where: { $0.id == task.id }) else {
-            return
-        }
+        guard let index = tasks.firstIndex(of: task) else { return }
         tasks[index].isCompleted.toggle()
+        persist()
     }
 
-    func didDeleteTask(at offsets: IndexSet) {
-        tasks.remove(atOffsets: offsets)
+    func didDeleteTask(ids: Set<UUID>) {
+        tasks.removeAll { ids.contains($0.id) }
+        persist()
+    }
+
+    private func loadTasks() {
+        tasks = taskStore.loadTasks()
+    }
+
+    private func persist() {
+        taskStore.saveTasks(tasks)
     }
 
     private func dismissAddTask() {
         newTaskTitle = ""
         isShowingAddTask = false
-    }
-
-    private func loadMockData() {
-        tasks = [
-            ToDoTask(
-                title: "Buy groceries",
-                isCompleted: false,
-                createdAt: Date().addingTimeInterval(-3600)
-            ),
-            ToDoTask(
-                title: "Read SwiftUI docs",
-                isCompleted: true,
-                createdAt: Date().addingTimeInterval(-7200)
-            ),
-            ToDoTask(
-                title: "Refactor ViewModels",
-                isCompleted: false,
-                createdAt: Date()
-            )
-        ]
     }
 }

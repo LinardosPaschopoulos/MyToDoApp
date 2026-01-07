@@ -8,24 +8,21 @@
 import SwiftUI
 
 struct TaskListView: View {
-    @StateObject private var viewModel = TaskListViewModel()
+    @StateObject private var viewModel: TaskListViewModel
+
+    init(viewModel: TaskListViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(viewModel.sortedTasks) { task in
-                    TaskRowView(
-                        title: task.title,
-                        isCompleted: task.isCompleted,
-                        timeCreated: task.createdAt
-                    )
-                    .onTapGesture {
-                        viewModel.didSelectTask(task)
-                    }
+            Group {
+                if viewModel.sortedTasks.isEmpty {
+                    emptyStateView
+                } else {
+                    taskListView
                 }
-                .onDelete(perform: viewModel.didDeleteTask)
             }
-            .listStyle(.plain)
             .navigationTitle("TaskFlow")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -39,6 +36,43 @@ struct TaskListView: View {
             .sheet(isPresented: $viewModel.isShowingAddTask) {
                 addTaskSheet
             }
+        }
+    }
+
+    private var taskListView: some View {
+        List {
+            ForEach(viewModel.sortedTasks) { task in
+                TaskRowView(task: task)
+                    .onTapGesture {
+                        viewModel.didSelectTask(task)
+                    }
+            }
+            .onDelete { offsets in
+                let ids = offsets.map { viewModel.sortedTasks[$0].id }
+                viewModel.didDeleteTask(ids: Set(ids))
+            }
+        }
+        .listStyle(.plain)
+    }
+
+    private var emptyStateView: some View {
+        VStack(spacing: 16) {
+            Spacer()
+            
+            Image(systemName: "checklist")
+                .font(.system(size: 64))
+                .foregroundColor(.secondary)
+            
+            Text("No Tasks")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            Text("Tap + to add your first task")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            
+            Spacer()
+            Spacer()
         }
     }
 

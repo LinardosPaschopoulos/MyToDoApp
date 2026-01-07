@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct MyToDoAppApp: App {
+    private let container = AppContainer()
+    
     var body: some Scene {
         WindowGroup {
-            TaskListView()
+            TaskListView(
+                viewModel: TaskListViewModel(taskStore: container.taskStore)
+            )
         }
     }
 }
