@@ -11,5 +11,5 @@ struct ToDoTask: Identifiable {
     let id = UUID()
     let title: String
     var isCompleted: Bool
-    let timeCreated: Date
+    let createdAt: Date
 }

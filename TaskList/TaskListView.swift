@@ -17,7 +17,7 @@ struct TaskListView: View {
                     TaskRowView(
                         title: task.title,
                         isCompleted: task.isCompleted,
-                        timeCreated: task.timeCreated
+                        timeCreated: task.createdAt
                     )
                     .onTapGesture {
                         viewModel.didSelectTask(task)

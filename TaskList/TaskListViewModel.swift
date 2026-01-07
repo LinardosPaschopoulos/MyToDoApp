@@ -15,7 +15,7 @@ final class TaskListViewModel: ObservableObject {
     @Published var newTaskTitle = ""
 
     var sortedTasks: [ToDoTask] {
-        tasks.sorted { $0.timeCreated < $1.timeCreated }
+        tasks.sorted { $0.createdAt < $1.createdAt }
     }
     
     init() {
@@ -38,7 +38,7 @@ final class TaskListViewModel: ObservableObject {
             ToDoTask(
                 title: trimmed,
                 isCompleted: false,
-                timeCreated: Date()
+                createdAt: Date()
             )
         )
 
@@ -66,17 +66,17 @@ final class TaskListViewModel: ObservableObject {
             ToDoTask(
                 title: "Buy groceries",
                 isCompleted: false,
-                timeCreated: Date().addingTimeInterval(-3600)
+                createdAt: Date().addingTimeInterval(-3600)
             ),
             ToDoTask(
                 title: "Read SwiftUI docs",
                 isCompleted: true,
-                timeCreated: Date().addingTimeInterval(-7200)
+                createdAt: Date().addingTimeInterval(-7200)
             ),
             ToDoTask(
                 title: "Refactor ViewModels",
                 isCompleted: false,
-                timeCreated: Date()
+                createdAt: Date()
             )
         ]
     }
