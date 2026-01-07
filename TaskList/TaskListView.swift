@@ -25,6 +25,7 @@ struct TaskListView: View {
                 }
                 .onDelete(perform: viewModel.didDeleteTask)
             }
+            .listStyle(.plain)
             .navigationTitle("TaskFlow")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
