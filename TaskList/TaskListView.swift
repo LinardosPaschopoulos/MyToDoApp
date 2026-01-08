@@ -9,11 +9,11 @@ import SwiftUI
 
 struct TaskListView: View {
     @StateObject private var viewModel: TaskListViewModel
-
+    
     init(viewModel: TaskListViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-
+    
     var body: some View {
         NavigationStack {
             Group {
@@ -41,7 +41,7 @@ struct TaskListView: View {
             }
         }
     }
-
+    
     private var taskListView: some View {
         List {
             ForEach(viewModel.sortedTasks) { task in
@@ -65,7 +65,7 @@ struct TaskListView: View {
         }
         .listStyle(.plain)
     }
-
+    
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Spacer()
@@ -86,13 +86,16 @@ struct TaskListView: View {
             Spacer()
         }
     }
-
+    
     private var addTaskSheet: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                TextField("Task description", text: $viewModel.newTaskTitle)
-                    .textFieldStyle(.roundedBorder)
-
+                TextField("Task description", text: $viewModel.newTaskTitle, axis: .vertical)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .lineLimit(.max)
+                
                 Spacer()
             }
             .padding()
@@ -103,7 +106,7 @@ struct TaskListView: View {
                         viewModel.didTapCancelAdd()
                     }
                 }
-
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         viewModel.didTapSaveTask()
@@ -121,9 +124,12 @@ struct TaskListView: View {
     private var editTaskSheet: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                TextField("Task title", text: $viewModel.editedTaskTitle)
-                    .textFieldStyle(.roundedBorder)
-
+                TextField("Task title", text: $viewModel.editedTaskTitle, axis: .vertical)
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .lineLimit(.max)
+                
                 Spacer()
             }
             .padding()
@@ -134,7 +140,7 @@ struct TaskListView: View {
                         viewModel.didCancelEdit()
                     }
                 }
-
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         viewModel.didSaveEdit()
