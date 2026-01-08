@@ -36,6 +36,9 @@ struct TaskListView: View {
             .sheet(isPresented: $viewModel.isShowingAddTask) {
                 addTaskSheet
             }
+            .sheet(item: $viewModel.editingTask) { _ in
+                editTaskSheet
+            }
         }
     }
 
@@ -45,6 +48,14 @@ struct TaskListView: View {
                 TaskRowView(task: task)
                     .onTapGesture {
                         viewModel.didSelectTask(task)
+                    }
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            viewModel.didRequestEdit(task)
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
+                        }
+                        .tint(.blue)
                     }
             }
             .onDelete { offsets in
@@ -99,6 +110,37 @@ struct TaskListView: View {
                     }
                     .disabled(
                         viewModel.newTaskTitle
+                            .trimmingCharacters(in: .whitespaces)
+                            .isEmpty
+                    )
+                }
+            }
+        }
+    }
+    
+    private var editTaskSheet: some View {
+        NavigationStack {
+            VStack(spacing: 16) {
+                TextField("Task title", text: $viewModel.editedTaskTitle)
+                    .textFieldStyle(.roundedBorder)
+
+                Spacer()
+            }
+            .padding()
+            .navigationTitle("Edit Task")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        viewModel.didCancelEdit()
+                    }
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Save") {
+                        viewModel.didSaveEdit()
+                    }
+                    .disabled(
+                        viewModel.editedTaskTitle
                             .trimmingCharacters(in: .whitespaces)
                             .isEmpty
                     )

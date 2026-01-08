@@ -15,7 +15,7 @@ struct TaskRowView: View {
     }
     
     var body: some View {
-        HStack(alignment: .center) {
+        HStack(alignment: .firstTextBaseline) {
             Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                 .foregroundColor(task.isCompleted ? .taskGreen : .taskGray)
             
@@ -24,14 +24,11 @@ struct TaskRowView: View {
                     .strikethrough(task.isCompleted, color: .taskSecondary)
                     .foregroundColor(task.isCompleted ? .taskSecondary : .taskPrimary)
                 
-                Text(formattedDate)
+                Text("Created at " + formattedDate)
                     .font(.caption)
                     .foregroundColor(.taskSecondary)
             }
-            
-            Spacer()
         }
         .padding(.vertical, 8)
-        .contentShape(Rectangle())
     }
 }

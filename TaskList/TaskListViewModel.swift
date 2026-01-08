@@ -5,14 +5,15 @@
 //  Created by Linardos Paschopoulos  on 7/1/26.
 //
 
-import Foundation
 import Combine
-import SwiftUI
+import Foundation
 
 final class TaskListViewModel: ObservableObject {
     @Published private(set) var tasks: [ToDoTask] = []
     @Published var isShowingAddTask = false
     @Published var newTaskTitle = ""
+    @Published var editingTask: ToDoTask?
+    @Published var editedTaskTitle = ""
     
     private let taskStore: TaskStore
     var sortedTasks: [ToDoTask] {
@@ -71,5 +72,35 @@ final class TaskListViewModel: ObservableObject {
     private func dismissAddTask() {
         newTaskTitle = ""
         isShowingAddTask = false
+    }
+    
+    func didRequestEdit(_ task: ToDoTask) {
+        editingTask = task
+        editedTaskTitle = task.title
+    }
+
+    func didCancelEdit() {
+        editingTask = nil
+        editedTaskTitle = ""
+    }
+
+    func didSaveEdit() {
+        guard
+            let task = editingTask,
+            let index = tasks.firstIndex(of: task)
+        else { return }
+
+        let trimmed = editedTaskTitle.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+
+        tasks[index] = ToDoTask(
+            id: task.id,
+            title: trimmed,
+            isCompleted: task.isCompleted,
+            createdAt: task.createdAt
+        )
+
+        persist()
+        didCancelEdit()
     }
 }
