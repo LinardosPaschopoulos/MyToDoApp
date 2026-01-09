@@ -13,8 +13,8 @@ struct MyToDoAppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            TaskListView(
-                viewModel: TaskListViewModel(taskStore: container.taskStore)
+            TaskView(
+                viewModel: TaskViewModel(taskService: container.taskService)
             )
         }
     }

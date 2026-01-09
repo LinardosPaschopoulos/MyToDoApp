@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct TaskListView: View {
-    @StateObject private var viewModel: TaskListViewModel
+struct TaskView: View {
+    @StateObject private var viewModel: TaskViewModel
     
-    init(viewModel: TaskListViewModel) {
+    init(viewModel: TaskViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     

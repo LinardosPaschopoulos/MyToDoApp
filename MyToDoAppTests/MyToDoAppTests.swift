@@ -10,13 +10,13 @@ import XCTest
 
 @MainActor
 final class TaskListViewModelTests: XCTestCase {
-    var viewModel: TaskListViewModel!
-    var mockStore: MockTaskStore!
+    var viewModel: TaskViewModel!
+    var mockStore: MockTaskListService!
 
     override func setUp() {
         super.setUp()
         
-        mockStore = MockTaskStore()
+        mockStore = MockTaskListService()
     }
 
     override func tearDown() {
@@ -27,7 +27,7 @@ final class TaskListViewModelTests: XCTestCase {
     }
     
     func testAddTask() {
-        viewModel = TaskListViewModel(taskStore: mockStore)
+        viewModel = TaskViewModel(taskService: mockStore)
         XCTAssertTrue(viewModel.sortedTasks.isEmpty)
         viewModel.newTaskTitle = "Test Task"
         viewModel.didTapSaveTask()
@@ -39,10 +39,10 @@ final class TaskListViewModelTests: XCTestCase {
     }
 
     func testToggleTaskCompletion() {
-        let task = ToDoTask(id: UUID(), title: "Task", isCompleted: false, createdAt: Date())
+        let task = TaskModel(id: UUID(), title: "Task", isCompleted: false, createdAt: Date())
         
         mockStore.savedTasks = [task]
-        viewModel = TaskListViewModel(taskStore: mockStore)
+        viewModel = TaskViewModel(taskService: mockStore)
         viewModel.didSelectTask(task)
 
         XCTAssertTrue(viewModel.sortedTasks[0].isCompleted)
@@ -50,10 +50,10 @@ final class TaskListViewModelTests: XCTestCase {
     }
 
     func testDeleteTask() {
-        let task = ToDoTask(id: UUID(), title: "Task", isCompleted: false, createdAt: Date())
+        let task = TaskModel(id: UUID(), title: "Task", isCompleted: false, createdAt: Date())
         
         mockStore.savedTasks = [task]
-        viewModel = TaskListViewModel(taskStore: mockStore)
+        viewModel = TaskViewModel(taskService: mockStore)
         viewModel.didDeleteTask(ids: Set([task.id]))
 
         XCTAssertTrue(viewModel.sortedTasks.isEmpty)
@@ -61,10 +61,10 @@ final class TaskListViewModelTests: XCTestCase {
     }
 
     func testEditTask() {
-        let task = ToDoTask(id: UUID(), title: "Old Title", isCompleted: false, createdAt: Date())
+        let task = TaskModel(id: UUID(), title: "Old Title", isCompleted: false, createdAt: Date())
         
         mockStore.savedTasks = [task]
-        viewModel = TaskListViewModel(taskStore: mockStore)
+        viewModel = TaskViewModel(taskService: mockStore)
         viewModel.didRequestEdit(task)
         viewModel.editedTaskTitle = "New Title"
         viewModel.didSaveEdit()

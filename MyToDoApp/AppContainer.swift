@@ -8,9 +8,9 @@
 import Foundation
 
 final class AppContainer {
-    let taskStore: TaskStore
+    let taskService: TaskService
 
-    init(taskStore: TaskStore = UserDefaultsTaskStore()) {
-        self.taskStore = taskStore
+    init(taskService: TaskService = UserDefaultsTaskService()) {
+        self.taskService = taskService
     }
 }

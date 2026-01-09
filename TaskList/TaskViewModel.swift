@@ -8,20 +8,21 @@
 import Combine
 import Foundation
 
-final class TaskListViewModel: ObservableObject {
-    @Published private(set) var tasks: [ToDoTask] = []
+final class TaskViewModel: ObservableObject {
+    @Published private(set) var tasks: [TaskModel] = []
     @Published var isShowingAddTask = false
     @Published var newTaskTitle = ""
-    @Published var editingTask: ToDoTask?
+    @Published var editingTask: TaskModel?
     @Published var editedTaskTitle = ""
-    
-    private let taskStore: TaskStore
-    var sortedTasks: [ToDoTask] {
+
+    private let taskService: TaskService
+
+    var sortedTasks: [TaskModel] {
         tasks.sorted { $0.createdAt < $1.createdAt }
     }
 
-    init(taskStore: TaskStore) {
-        self.taskStore = taskStore
+    init(taskService: TaskService) {
+        self.taskService = taskService
         loadTasks()
     }
 
@@ -38,7 +39,7 @@ final class TaskListViewModel: ObservableObject {
         guard !trimmed.isEmpty else { return }
 
         tasks.append(
-            ToDoTask(
+            TaskModel(
                 id: UUID(),
                 title: trimmed,
                 isCompleted: false,
@@ -50,7 +51,7 @@ final class TaskListViewModel: ObservableObject {
         dismissAddTask()
     }
 
-    func didSelectTask(_ task: ToDoTask) {
+    func didSelectTask(_ task: TaskModel) {
         guard let index = tasks.firstIndex(of: task) else { return }
         tasks[index].isCompleted.toggle()
         persist()
@@ -61,20 +62,7 @@ final class TaskListViewModel: ObservableObject {
         persist()
     }
 
-    private func loadTasks() {
-        tasks = taskStore.loadTasks()
-    }
-
-    private func persist() {
-        taskStore.saveTasks(tasks)
-    }
-
-    private func dismissAddTask() {
-        newTaskTitle = ""
-        isShowingAddTask = false
-    }
-    
-    func didRequestEdit(_ task: ToDoTask) {
+    func didRequestEdit(_ task: TaskModel) {
         editingTask = task
         editedTaskTitle = task.title
     }
@@ -93,14 +81,27 @@ final class TaskListViewModel: ObservableObject {
         let trimmed = editedTaskTitle.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
 
-        tasks[index] = ToDoTask(
+        tasks[index] = TaskModel(
             id: task.id,
             title: trimmed,
             isCompleted: task.isCompleted,
             createdAt: task.createdAt
         )
-
+        
         persist()
         didCancelEdit()
+    }
+
+    private func loadTasks() {
+        tasks = taskService.loadTasks()
+    }
+
+    private func persist() {
+        taskService.saveTasks(tasks)
+    }
+
+    private func dismissAddTask() {
+        newTaskTitle = ""
+        isShowingAddTask = false
     }
 }

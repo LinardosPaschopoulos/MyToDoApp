@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskRowView: View {
-    let task: ToDoTask
+    let task: TaskModel
     
     private var formattedDate: String {
         task.createdAt.formatted(date: .long, time: .shortened)
@@ -40,4 +40,3 @@ struct TaskRowView: View {
         .accessibilityAddTraits(.isButton)
     }
 }
-
