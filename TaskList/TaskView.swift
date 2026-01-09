@@ -9,11 +9,12 @@ import SwiftUI
 
 struct TaskView: View {
     @StateObject private var viewModel: TaskViewModel
-    
+    @StateObject private var coordinator = DefaultTaskCoordinator()
+
     init(viewModel: TaskViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-    
+
     var body: some View {
         NavigationStack {
             Group {
@@ -27,21 +28,31 @@ struct TaskView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        viewModel.didTapAdd()
+                        coordinator.showAddTask()
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
-            .sheet(isPresented: $viewModel.isShowingAddTask) {
-                addTaskSheet
-            }
-            .sheet(item: $viewModel.editingTask) { _ in
-                editTaskSheet
-            }
+        }
+        .sheet(isPresented: $coordinator.isShowingAddTask) {
+            TaskSheetView(
+                text: $viewModel.newTaskTitle,
+                title: "New Task",
+                onCancel: { viewModel.didTapCancelAdd(); coordinator.dismiss() },
+                onSave: { viewModel.didTapSaveTask(); coordinator.dismiss() }
+            )
+        }
+        .sheet(item: $coordinator.editingTask) { _ in
+            TaskSheetView(
+                text: $viewModel.editedTaskTitle,
+                title: "Edit Task",
+                onCancel: { viewModel.didCancelEdit(); coordinator.dismiss() },
+                onSave: { viewModel.didSaveEdit(); coordinator.dismiss() }
+            )
         }
     }
-    
+
     private var taskListView: some View {
         List {
             ForEach(viewModel.sortedTasks) { task in
@@ -52,6 +63,7 @@ struct TaskView: View {
                     .swipeActions(edge: .leading) {
                         Button {
                             viewModel.didRequestEdit(task)
+                            coordinator.showEditTask(task: task)
                         } label: {
                             Label("Edit", systemImage: "pencil")
                         }
@@ -65,43 +77,20 @@ struct TaskView: View {
         }
         .listStyle(.plain)
     }
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Spacer()
-            
             Image(systemName: "checklist")
                 .font(.system(size: 64))
                 .foregroundColor(.secondary)
-            
             Text("No Tasks")
                 .font(.title2)
                 .fontWeight(.semibold)
-            
             Text("Tap + to add your first task")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
-            
-            Spacer()
             Spacer()
         }
-    }
-    
-    private var addTaskSheet: some View {
-        TaskSheetView(
-            text: $viewModel.newTaskTitle,
-            title: "New Task",
-            onCancel: viewModel.didTapCancelAdd,
-            onSave: viewModel.didTapSaveTask
-        )
-    }
-
-    private var editTaskSheet: some View {
-        TaskSheetView(
-            text: $viewModel.editedTaskTitle,
-            title: "Edit Task",
-            onCancel: viewModel.didCancelEdit,
-            onSave: viewModel.didSaveEdit
-        )
     }
 }

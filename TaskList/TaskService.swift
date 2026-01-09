@@ -19,14 +19,12 @@ final class UserDefaultsTaskService: TaskService {
         guard
             let data = UserDefaults.standard.data(forKey: key),
             let tasks = try? JSONDecoder().decode([TaskModel].self, from: data)
-        else {
-            return []
-        }
+        else { return [] }
         return tasks
     }
 
     func saveTasks(_ tasks: [TaskModel]) {
-        let data = try? JSONEncoder().encode(tasks)
+        guard let data = try? JSONEncoder().encode(tasks) else { return }
         UserDefaults.standard.set(data, forKey: key)
     }
 }

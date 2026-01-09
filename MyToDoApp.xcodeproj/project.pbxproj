@@ -25,6 +25,7 @@
 		E7B7515B2F11335F0093A27C /* Exceptions for "MyToDoAppTests" folder in "MyToDoApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Mocks/MockTaskCoordinator.swift,
 				Mocks/MockTaskService.swift,
 			);
 			target = E7EA3A582F05343B004B13EB /* MyToDoApp */;
@@ -32,6 +33,7 @@
 		E7B7515C2F11335F0093A27C /* Exceptions for "MyToDoAppTests" folder in "MyToDoAppTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Mocks/MockTaskCoordinator.swift,
 				Mocks/MockTaskService.swift,
 			);
 			target = E7EA3A652F05343C004B13EB /* MyToDoAppTests */;
@@ -42,6 +44,11 @@
 		E7B751572F1133440093A27C /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		E7B751942F1148A70093A27C /* Coordinator */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		E7BA1AFC2F0E5AF000B15CBD /* TaskList */ = {
@@ -91,6 +98,7 @@
 		E7EA3A502F05343B004B13EB = {
 			isa = PBXGroup;
 			children = (
+				E7B751942F1148A70093A27C /* Coordinator */,
 				E7B751572F1133440093A27C /* Resources */,
 				E7BA1B002F0E5D5100B15CBD /* Reusables And Utilities */,
 				E7BA1AFC2F0E5AF000B15CBD /* TaskList */,
@@ -126,6 +134,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				E7B751572F1133440093A27C /* Resources */,
+				E7B751942F1148A70093A27C /* Coordinator */,
 				E7BA1AFC2F0E5AF000B15CBD /* TaskList */,
 				E7BA1B002F0E5D5100B15CBD /* Reusables And Utilities */,
 				E7EA3A5B2F05343B004B13EB /* MyToDoApp */,
