@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-final class MockTaskListService: TaskService {
+final class MockTaskService: TaskService {
     var savedTasks: [TaskModel] = []
 
     func loadTasks() -> [TaskModel] {

@@ -11,12 +11,12 @@ import XCTest
 @MainActor
 final class TaskListViewModelTests: XCTestCase {
     var viewModel: TaskViewModel!
-    var mockStore: MockTaskListService!
+    var mockStore: MockTaskService!
 
     override func setUp() {
         super.setUp()
         
-        mockStore = MockTaskListService()
+        mockStore = MockTaskService()
     }
 
     override func tearDown() {
