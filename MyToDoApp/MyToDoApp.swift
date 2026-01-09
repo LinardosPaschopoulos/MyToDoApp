@@ -8,14 +8,13 @@
 import SwiftUI
 
 @main
-struct MyToDoAppApp: App {
-    private let container = AppContainer()
-    
+struct MyToDoApp: App {
     var body: some Scene {
         WindowGroup {
-            TaskView(
-                viewModel: TaskViewModel(taskService: container.taskService)
-            )
+            let service = UserDefaultsTaskService()
+            let viewModel = TaskViewModel(taskService: service)
+
+            TaskView(viewModel: viewModel)
         }
     }
 }
