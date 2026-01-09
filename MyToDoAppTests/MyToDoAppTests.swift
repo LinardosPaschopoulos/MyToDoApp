@@ -72,4 +72,25 @@ final class TaskListViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.sortedTasks[0].title, "New Title")
         XCTAssertEqual(mockStore.savedTasks[0].title, "New Title")
     }
+    
+    func testAddTaskWithEmptyTitleDoesNothing() {
+        viewModel = TaskViewModel(taskService: mockStore)
+        viewModel.newTaskTitle = "   "
+        viewModel.didTapSaveTask()
+
+        XCTAssertTrue(viewModel.sortedTasks.isEmpty)
+        XCTAssertTrue(mockStore.savedTasks.isEmpty)
+    }
+    
+    func testCancelEditDoesNotChangeTask() {
+        let task = TaskModel(id: UUID(), title: "Original", isCompleted: false, createdAt: Date())
+        mockStore.savedTasks = [task]
+
+        viewModel = TaskViewModel(taskService: mockStore)
+        viewModel.didRequestEdit(task)
+        viewModel.editedTaskTitle = "Changed"
+        viewModel.didCancelEdit()
+
+        XCTAssertEqual(viewModel.sortedTasks[0].title, "Original")
+    }
 }
