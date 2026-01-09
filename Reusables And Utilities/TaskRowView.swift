@@ -11,7 +11,7 @@ struct TaskRowView: View {
     let task: ToDoTask
     
     private var formattedDate: String {
-        task.createdAt.formatted(date: .abbreviated, time: .shortened)
+        task.createdAt.formatted(date: .long, time: .shortened)
     }
     
     var body: some View {
@@ -30,5 +30,14 @@ struct TaskRowView: View {
             }
         }
         .padding(.vertical, 8)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(
+            "\(task.title), " +
+            "\(task.isCompleted ? "completed" : "not completed"), " +
+            "created on \(formattedDate)"
+        )
+        .accessibilityHint("Tap to toggle completion")
+        .accessibilityAddTraits(.isButton)
     }
 }
+
