@@ -21,7 +21,29 @@
 		E7EA3A662F05343C004B13EB /* MyToDoAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyToDoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E7B7515B2F11335F0093A27C /* Exceptions for "MyToDoAppTests" folder in "MyToDoApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Mocks/MockTaskService.swift,
+			);
+			target = E7EA3A582F05343B004B13EB /* MyToDoApp */;
+		};
+		E7B7515C2F11335F0093A27C /* Exceptions for "MyToDoAppTests" folder in "MyToDoAppTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Mocks/MockTaskService.swift,
+			);
+			target = E7EA3A652F05343C004B13EB /* MyToDoAppTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		E7B751572F1133440093A27C /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		E7BA1AFC2F0E5AF000B15CBD /* TaskList */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TaskList;
@@ -32,11 +54,6 @@
 			path = "Reusables And Utilities";
 			sourceTree = "<group>";
 		};
-		E7DEC9772F1000410079744F /* Mocks */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Mocks;
-			sourceTree = "<group>";
-		};
 		E7EA3A5B2F05343B004B13EB /* MyToDoApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = MyToDoApp;
@@ -44,6 +61,10 @@
 		};
 		E7EA3A692F05343C004B13EB /* MyToDoAppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E7B7515B2F11335F0093A27C /* Exceptions for "MyToDoAppTests" folder in "MyToDoApp" target */,
+				E7B7515C2F11335F0093A27C /* Exceptions for "MyToDoAppTests" folder in "MyToDoAppTests" target */,
+			);
 			path = MyToDoAppTests;
 			sourceTree = "<group>";
 		};
@@ -70,7 +91,7 @@
 		E7EA3A502F05343B004B13EB = {
 			isa = PBXGroup;
 			children = (
-				E7DEC9772F1000410079744F /* Mocks */,
+				E7B751572F1133440093A27C /* Resources */,
 				E7BA1B002F0E5D5100B15CBD /* Reusables And Utilities */,
 				E7BA1AFC2F0E5AF000B15CBD /* TaskList */,
 				E7EA3A5B2F05343B004B13EB /* MyToDoApp */,
@@ -104,9 +125,9 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				E7B751572F1133440093A27C /* Resources */,
 				E7BA1AFC2F0E5AF000B15CBD /* TaskList */,
 				E7BA1B002F0E5D5100B15CBD /* Reusables And Utilities */,
-				E7DEC9772F1000410079744F /* Mocks */,
 				E7EA3A5B2F05343B004B13EB /* MyToDoApp */,
 			);
 			name = MyToDoApp;
