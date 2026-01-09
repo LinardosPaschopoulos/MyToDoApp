@@ -17,9 +17,9 @@ struct TaskSheetView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                TextField("", text: $text, axis: .vertical)
+                TextField("Task description", text: $text, axis: .vertical)
                     .padding()
-                    .background(Color(.systemGray6))
+                    .background(Color(.textFieldBackground))
                     .cornerRadius(8)
                     .lineLimit(.max)
                 
