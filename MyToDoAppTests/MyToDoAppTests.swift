@@ -8,29 +8,68 @@
 import XCTest
 @testable import MyToDoApp
 
-final class MyToDoAppTests: XCTestCase {
+@MainActor
+final class TaskListViewModelTests: XCTestCase {
+    var viewModel: TaskListViewModel!
+    var mockStore: MockTaskStore!
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    override func setUp() {
+        super.setUp()
+        
+        mockStore = MockTaskStore()
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    override func tearDown() {
+        viewModel = nil
+        mockStore = nil
+        
+        super.tearDown()
+    }
+    
+    func testAddTask() {
+        viewModel = TaskListViewModel(taskStore: mockStore)
+        XCTAssertTrue(viewModel.sortedTasks.isEmpty)
+        viewModel.newTaskTitle = "Test Task"
+        viewModel.didTapSaveTask()
+
+        XCTAssertEqual(viewModel.sortedTasks.count, 1)
+        XCTAssertEqual(viewModel.sortedTasks[0].title, "Test Task")
+        XCTAssertFalse(viewModel.sortedTasks[0].isCompleted)
+        XCTAssertEqual(mockStore.savedTasks.count, 1)
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testToggleTaskCompletion() {
+        let task = ToDoTask(id: UUID(), title: "Task", isCompleted: false, createdAt: Date())
+        
+        mockStore.savedTasks = [task]
+        viewModel = TaskListViewModel(taskStore: mockStore)
+        viewModel.didSelectTask(task)
+
+        XCTAssertTrue(viewModel.sortedTasks[0].isCompleted)
+        XCTAssertTrue(mockStore.savedTasks[0].isCompleted)
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testDeleteTask() {
+        let task = ToDoTask(id: UUID(), title: "Task", isCompleted: false, createdAt: Date())
+        
+        mockStore.savedTasks = [task]
+        viewModel = TaskListViewModel(taskStore: mockStore)
+        viewModel.didDeleteTask(ids: Set([task.id]))
+
+        XCTAssertTrue(viewModel.sortedTasks.isEmpty)
+        XCTAssertTrue(mockStore.savedTasks.isEmpty)
     }
 
+    func testEditTask() {
+        let task = ToDoTask(id: UUID(), title: "Old Title", isCompleted: false, createdAt: Date())
+        
+        mockStore.savedTasks = [task]
+        viewModel = TaskListViewModel(taskStore: mockStore)
+        viewModel.didRequestEdit(task)
+        viewModel.editedTaskTitle = "New Title"
+        viewModel.didSaveEdit()
+
+        XCTAssertEqual(viewModel.sortedTasks[0].title, "New Title")
+        XCTAssertEqual(mockStore.savedTasks[0].title, "New Title")
+    }
 }
