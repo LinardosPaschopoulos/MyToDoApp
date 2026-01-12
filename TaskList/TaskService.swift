@@ -24,7 +24,7 @@ final class UserDefaultsTaskService: TaskService {
     }
 
     func saveTasks(_ tasks: [TaskModel]) {
-        guard let data = try? JSONEncoder().encode(tasks) else { return }
+        let data = try? JSONEncoder().encode(tasks)
         UserDefaults.standard.set(data, forKey: key)
     }
 }

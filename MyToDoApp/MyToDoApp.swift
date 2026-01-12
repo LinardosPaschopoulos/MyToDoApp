@@ -12,7 +12,8 @@ struct MyToDoApp: App {
     var body: some Scene {
         WindowGroup {
             let service = UserDefaultsTaskService()
-            let viewModel = TaskViewModel(taskService: service)
+            let coordinator = DefaultTaskCoordinator()
+            let viewModel = TaskViewModel(taskService: service, coordinator: coordinator)
 
             TaskView(viewModel: viewModel)
         }

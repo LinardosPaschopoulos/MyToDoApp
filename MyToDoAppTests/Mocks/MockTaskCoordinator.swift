@@ -7,17 +7,31 @@
 
 import Foundation
 
+@MainActor
 final class MockTaskCoordinator: TaskCoordinator {
-    var didShowAddTask = false
-    var didShowEditTask: TaskModel?
+    var startedEdit: TaskModel?
+    var finishedEditCalled = false
+    var canceledEditCalled = false
+    var finishedAddCalled = false
+    var canceledAddCalled = false
 
-    func showAddTask() {
-        didShowAddTask = true
+    func didStartEdit(task: TaskModel) {
+        startedEdit = task
     }
 
-    func showEditTask(task: TaskModel) {
-        didShowEditTask = task
+    func didFinishEdit() {
+        finishedEditCalled = true
     }
 
-    func dismiss() { }
+    func didCancelEdit() {
+        canceledEditCalled = true
+    }
+
+    func didFinishAdd() {
+        finishedAddCalled = true
+    }
+
+    func didCancelAdd() {
+        canceledAddCalled = true
+    }
 }

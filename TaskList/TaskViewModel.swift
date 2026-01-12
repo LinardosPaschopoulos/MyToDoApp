@@ -5,43 +5,61 @@
 //  Created by Linardos Paschopoulos  on 7/1/26.
 //
 
-import SwiftUI
+import Foundation
 import Combine
 
-@MainActor
 final class TaskViewModel: ObservableObject {
     @Published private(set) var tasks: [TaskModel] = []
     @Published var newTaskTitle = ""
     @Published var editedTaskTitle = ""
     @Published var editingTask: TaskModel?
+    @Published var isShowingAddTask = false
 
     private let taskService: TaskService
+    private weak var coordinator: TaskCoordinator?
 
     var sortedTasks: [TaskModel] {
         tasks.sorted { $0.createdAt < $1.createdAt }
     }
 
-    init(taskService: TaskService) {
+    init(taskService: TaskService, coordinator: TaskCoordinator? = nil) {
         self.taskService = taskService
+        self.coordinator = coordinator
         loadTasks()
+    }
+
+    func didTapAdd() {
+        isShowingAddTask = true
+    }
+
+    func didTapCancelAdd() {
+        newTaskTitle = ""
+        isShowingAddTask = false
+        coordinator?.didCancelAdd()
     }
 
     func didTapSaveTask() {
         let trimmed = newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
-        tasks.append(TaskModel(id: UUID(), title: trimmed, isCompleted: false, createdAt: Date()))
+        let task = TaskModel(id: UUID(), title: trimmed, isCompleted: false, createdAt: Date())
+        tasks.append(task)
         persist()
-        newTaskTitle = ""
-    }
 
-    func didTapCancelAdd() {
         newTaskTitle = ""
+        isShowingAddTask = false
+        coordinator?.didFinishAdd()
     }
 
     func didRequestEdit(_ task: TaskModel) {
         editingTask = task
         editedTaskTitle = task.title
+        coordinator?.didStartEdit(task: task)
+    }
+
+    func didCancelEdit() {
+        clearEditingState()
+        coordinator?.didCancelEdit()
     }
 
     func didSaveEdit() {
@@ -59,18 +77,9 @@ final class TaskViewModel: ObservableObject {
             isCompleted: task.isCompleted,
             createdAt: task.createdAt
         )
-
-        clearEditingState()
         persist()
-    }
-
-    func didCancelEdit() {
         clearEditingState()
-    }
-
-    private func clearEditingState() {
-        editingTask = nil
-        editedTaskTitle = ""
+        coordinator?.didFinishEdit()
     }
 
     func didSelectTask(_ task: TaskModel) {
@@ -82,6 +91,11 @@ final class TaskViewModel: ObservableObject {
     func didDeleteTask(ids: Set<UUID>) {
         tasks.removeAll { ids.contains($0.id) }
         persist()
+    }
+
+    private func clearEditingState() {
+        editingTask = nil
+        editedTaskTitle = ""
     }
 
     private func loadTasks() {

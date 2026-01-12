@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TaskView: View {
     @StateObject private var viewModel: TaskViewModel
-    @StateObject private var coordinator = DefaultTaskCoordinator()
 
     init(viewModel: TaskViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -28,27 +27,27 @@ struct TaskView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        coordinator.showAddTask()
+                        viewModel.didTapAdd()
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
         }
-        .sheet(isPresented: $coordinator.isShowingAddTask) {
+        .sheet(isPresented: $viewModel.isShowingAddTask) {
             TaskSheetView(
                 text: $viewModel.newTaskTitle,
                 title: "New Task",
-                onCancel: { viewModel.didTapCancelAdd(); coordinator.dismiss() },
-                onSave: { viewModel.didTapSaveTask(); coordinator.dismiss() }
+                onCancel: { viewModel.didTapCancelAdd() },
+                onSave: { viewModel.didTapSaveTask() }
             )
         }
-        .sheet(item: $coordinator.editingTask) { _ in
+        .sheet(item: $viewModel.editingTask) { _ in
             TaskSheetView(
                 text: $viewModel.editedTaskTitle,
                 title: "Edit Task",
-                onCancel: { viewModel.didCancelEdit(); coordinator.dismiss() },
-                onSave: { viewModel.didSaveEdit(); coordinator.dismiss() }
+                onCancel: { viewModel.didCancelEdit() },
+                onSave: { viewModel.didSaveEdit() }
             )
         }
     }
@@ -57,17 +56,13 @@ struct TaskView: View {
         List {
             ForEach(viewModel.sortedTasks) { task in
                 TaskRowView(task: task)
-                    .onTapGesture {
-                        viewModel.didSelectTask(task)
-                    }
+                    .onTapGesture { viewModel.didSelectTask(task) }
                     .swipeActions(edge: .leading) {
                         Button {
                             viewModel.didRequestEdit(task)
-                            coordinator.showEditTask(task: task)
                         } label: {
                             Label("Edit", systemImage: "pencil")
-                        }
-                        .tint(.blue)
+                        }.tint(.blue)
                     }
             }
             .onDelete { offsets in
